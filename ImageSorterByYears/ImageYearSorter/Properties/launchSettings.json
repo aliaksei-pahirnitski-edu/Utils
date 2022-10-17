@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ImageYearSorter": {
+      "commandName": "Project",
+      "commandLineArgs": "print-info \"E:/SprinGFlowers.jpg\""
+    }
+  }
+}
