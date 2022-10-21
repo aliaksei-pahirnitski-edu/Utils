@@ -2,7 +2,7 @@
   "profiles": {
     "ImageYearSorter": {
       "commandName": "Project",
-      "commandLineArgs": "print-info \"E:\\Education\\2-Projects\\git-edu\\Utils\\ImageSorterByYears\\Assets\\SpringFlowersResized.xyz\""
+      "commandLineArgs": "print-info \"E:\\Education\\2-Projects\\git-edu\\Utils\\ImageSorterByYears\\Assets\\SpringFlowersResized.jpg\""
     }
   }
 }

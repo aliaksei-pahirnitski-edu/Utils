@@ -17,7 +17,7 @@ namespace ImageYearSorter.App.Dto
         string Extention,
         bool IsImage,
         bool IsVideo,
-        PhotoTakenAtDto? PictureTakenAt,
+        YearQuarterMarkerDto? PictureTakenAt,
         DateTimeOffset FileCreatedAt,
         DateTimeOffset FileModifiedAt
         );

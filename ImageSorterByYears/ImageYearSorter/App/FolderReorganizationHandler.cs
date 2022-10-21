@@ -1,4 +1,6 @@
-﻿namespace ImageYearSorter.App
+﻿using ImageYearSorter.ValueObjects;
+
+namespace ImageYearSorter.App
 {
     /// <summary>
     /// Handler for commands to 
@@ -36,7 +38,22 @@
         /// <param name="folderPath">Root folder where to search image files</param>
         public void Status(string folderPath)
         {
-            Console.WriteLine("Todo Status not implemented..");
+            Console.WriteLine($"Starting checking status of the folder [{folderPath}] ...");
+            var checkFolderResult = FolderPath.Create(folderPath);
+            if (!checkFolderResult.IsOk())
+            {
+                foreach (var invalidation in checkFolderResult.Invalidations!)
+                {
+                    Console.WriteLine(invalidation.GetMessage());
+                }
+
+                return;
+            }
+            
+            folderPath = checkFolderResult.OkResult.NormalizedFullPath;
+
+
+
         }
     }
 }

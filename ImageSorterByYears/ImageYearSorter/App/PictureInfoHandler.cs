@@ -46,7 +46,18 @@ namespace ImageYearSorter.App
             }
             imageFullPath = checkFilePathResult.OkResult.NormalizedFullPath;
 
-            var photoModel = new PhotoYearQuaterModel(pictureTakenAt);            
+            var photoModel = new PhotoYearQuaterModel(pictureTakenAt);
+
+            var test1 = YearQuarterMarker.Create(pictureTakenAt);
+            var test2 = YearQuarterMarker.Create(pictureTakenAt.AddDays(4));
+            var bEqA = test1 == test2;
+            var bRefEqA = Object.ReferenceEquals(test1,test2);
+
+            var test3 = test1.AsDto();
+            var test4 = test2.AsDto();
+            var bEqB = test3 == test4;
+            var bRefEqV = Object.ReferenceEquals(test3, test4);
+
 
             var pictureInfoWithVerbose = new PhotoInfoDto(
                 ImageFullPath: imageFullPath
