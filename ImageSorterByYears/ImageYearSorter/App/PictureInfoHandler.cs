@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Cocona;
 using ImageYearSorter.App.Dto;
 using ImageYearSorter.Models;
@@ -29,10 +28,7 @@ namespace ImageYearSorter.App
         /// <param name="imageFullPath">Full path to image</param>
         public void PrintInfo([Argument] string imageFullPath)
         {
-            var testNormalizedPath = Path.GetFullPath(imageFullPath);
-            Debug.Assert(imageFullPath == testNormalizedPath); //todo, thinking..
-
-            var checkFilePathResult = FilePath.Convert(imageFullPath);
+            var checkFilePathResult = FilePath.Create(imageFullPath);
             if (!checkFilePathResult.IsOk())
             {
                 foreach (var invalidation in checkFilePathResult.Invalidations!)
@@ -42,27 +38,15 @@ namespace ImageYearSorter.App
 
                 return;
             }
-            if (!_photoDateProvider.GetPictureDate(checkFilePathResult.Value!, out DateTimeOffset pictureTakenAt))
+            
+            if (!_photoDateProvider.GetPictureDate(checkFilePathResult.OkResult, out DateTimeOffset pictureTakenAt))
             {
                 Console.WriteLine("Image has no metadata");
                 return;
             }
+            imageFullPath = checkFilePathResult.OkResult.NormalizedFullPath;
 
-            var photoModel = new PhotoYearQuaterModel(pictureTakenAt);
-
-            var finfo = new FileInfo(imageFullPath);
-            var test0 = finfo.CreationTime;
-            var test1 = finfo.LastAccessTime;
-            var test2 = finfo.LastWriteTime;
-
-            Debug.Assert(finfo.CreationTime == File.GetCreationTime(imageFullPath));
-            Debug.Assert(finfo.LastAccessTime == File.GetLastAccessTime(imageFullPath));
-            Debug.Assert(finfo.LastWriteTime == File.GetLastWriteTime(imageFullPath));
-            Debug.Assert(finfo.LastWriteTimeUtc == File.GetLastWriteTimeUtc(imageFullPath));
-
-            
-
-            File.GetCreationTime(imageFullPath);
+            var photoModel = new PhotoYearQuaterModel(pictureTakenAt);            
 
             var pictureInfoWithVerbose = new PhotoInfoDto(
                 ImageFullPath: imageFullPath
@@ -70,8 +54,8 @@ namespace ImageYearSorter.App
                 , IsImage: false // todo
                 , IsVideo: false // todo
                 , PictureTakenAt: photoModel.AsDto()
-                , FileCreatedAt: finfo.CreationTime
-                , FileModifiedAt: finfo.LastWriteTime);
+                , FileCreatedAt: File.GetCreationTime(imageFullPath)
+                , FileModifiedAt: File.GetLastWriteTime(imageFullPath));
 
             var prettyResult = JsonSerializer.Serialize(pictureInfoWithVerbose, new JsonSerializerOptions() { WriteIndented = true });
             Console.WriteLine(prettyResult);

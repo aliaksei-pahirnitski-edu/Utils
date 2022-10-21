@@ -16,11 +16,13 @@ public sealed class FilePath : ValueObject
         {
             return new FilePath(fullPath);
         }
-        return Result<FilePath>.Error(new Invalidation("Not valid or not existing file path"));
+        return Result<FilePath>.Error(new Invalidation("Not valid or not existing file path [{0}]", fullPath));
     }
 
     protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return NormalizedFullPath;
     }
+
+    public override string ToString() => NormalizedFullPath;
 }

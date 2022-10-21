@@ -9,12 +9,20 @@ namespace ImageYearSorter.Utils
         /// </summary>
         /// <remarks>
         /// To be tested:
-        ///  0) not valid path
-        ///  1) file is not existing
-        ///  2) file is not an image (txt)
-        ///  3) file is video (can we get date of video?)
-        ///  4) OK: file is real photo
-        ///  5) OK: file is resized photo (GPS coords dissapeared, but origin date still available)
+        ///  A) Negative
+        ///  0) not valid path  => System.IO.FileNotFoundException: 'Could not find file ..
+        ///  0.5) path to folder instead of file: System.UnauthorizedAccessException: 'Access to the path 'E:\..' is denied.'
+        ///     or System.IO.IOException: 'The filename, directory name, or volume label syntax is incorrect.
+        ///  1) file is not existing => System.IO.FileNotFoundException: 'Could not find file  ...
+        ///  2) file is not an image (txt) => ExifLib.ExifLibException: 'File is not a valid JPEG'
+        ///  3) file is video (can we get date of video?) => !!! ExifLib.ExifLibException: 'File is not a valid JPEG' !!! => for Video need another lib
+        ///  4) file is image but not jpeg (example PNG) => ExifLib.ExifLibException: 'File is not a valid JPEG'
+        ///  5) file is JPEG but without metadata (png converted fo jpeg) => OK, prints Image has no metadata
+        ///  
+        ///  B) Positive
+        ///  B1) file is real photo => Ok
+        ///  B2) file is resized photo (GPS coords dissapeared, but origin date still available) => Ok
+        ///  B3) file is JPEG, but extension removed, or replaced to .xyz => Ok, opens and finds date
         /// </remarks>
         /// <param name="imgFullPath"></param>
         /// <param name="pictureTakenAt"></param>

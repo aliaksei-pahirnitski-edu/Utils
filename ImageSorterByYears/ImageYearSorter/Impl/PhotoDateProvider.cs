@@ -8,9 +8,9 @@ namespace ImageYearSorter.Impl
     {
         public bool GetPictureDate(FilePath imgFilePath, out DateTimeOffset pictureTakenAt)
         {
-            pictureTakenAt = DateTimeOffset.MinValue;            
+            pictureTakenAt = DateTimeOffset.MinValue;
 
-            using (ExifReader reader = new ExifReader(imgFilePath.FullPath))
+            using (ExifReader reader = new ExifReader(imgFilePath.NormalizedFullPath))
             {
                 // Extract the tag data using the ExifTags enumeration
                 if (reader.GetTagValue(ExifTags.DateTimeDigitized, out DateTime datePictureTaken))
