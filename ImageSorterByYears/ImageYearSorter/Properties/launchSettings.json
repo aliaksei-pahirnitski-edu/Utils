@@ -2,7 +2,7 @@
   "profiles": {
     "ImageYearSorter": {
       "commandName": "Project",
-      "commandLineArgs": "print-info \"E:\\Education\\02-Projects\\Utils\\ImageSorterByYears\\Assets\\SpringFlowersFull.jpg\""
+      "commandLineArgs": "status --folder  E:\\Education\\02-Projects\\Utils\\ImageSorterByYears\\Assets\\"
     }
   }
 }

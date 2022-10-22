@@ -1,4 +1,8 @@
-﻿using ImageYearSorter.ValueObjects;
+﻿using Cocona;
+using ImageYearSorter.Models;
+using ImageYearSorter.Utils;
+using ImageYearSorter.ValueObjects;
+using System.Text.Json;
 
 namespace ImageYearSorter.App
 {
@@ -10,15 +14,18 @@ namespace ImageYearSorter.App
     /// </summary>
     internal class FolderReorganizationHandler
     {
-        public FolderReorganizationHandler()
+        private readonly IPhotoDateProvider _photoDateProvider;
+
+        public FolderReorganizationHandler(IPhotoDateProvider photoDateProvider)
         {
+            _photoDateProvider = photoDateProvider;
         }
 
         /// <summary>
         /// Checks pictures relocated to year and quater subfolders, if theirs picture date matches subfolder prefix
         /// </summary>
         /// <param name="folderPath">Root folder where to search image files</param>
-        public void Check(string folderPath)
+        public void Check(string folder)
         {
             Console.WriteLine("Todo Check not implemented..");
         }
@@ -27,7 +34,7 @@ namespace ImageYearSorter.App
         /// Performs relocation of images, except ones already located in year-with-quarter subfolder
         /// </summary>
         /// <param name="folderPath">Root folder where to search image files</param>
-        public void Run(string folderPath)
+        public void Run(string folder)
         {
             Console.WriteLine("Todo Run not implemented..");
         }
@@ -35,11 +42,11 @@ namespace ImageYearSorter.App
         /// <summary>
         /// Reports status of wherther relocation of pictures needed and how many
         /// </summary>
-        /// <param name="folderPath">Root folder where to search image files</param>
-        public void Status(string folderPath)
+        /// <param name="folder">Root folder where to search image files</param>
+        public void Status(string folder)
         {
-            Console.WriteLine($"Starting checking status of the folder [{folderPath}] ...");
-            var checkFolderResult = FolderPath.Create(folderPath);
+            Console.WriteLine($"Starting checking status of the folder [{folder}] ...");
+            var checkFolderResult = FolderPath.Create(folder);
             if (!checkFolderResult.IsOk())
             {
                 foreach (var invalidation in checkFolderResult.Invalidations!)
@@ -49,11 +56,12 @@ namespace ImageYearSorter.App
 
                 return;
             }
-            
-            folderPath = checkFolderResult.OkResult.NormalizedFullPath;
 
+            var folderProcessor = new FolderRootModel(checkFolderResult.OkResult);
+            var status = folderProcessor.GetStatus(_photoDateProvider);
 
-
+            var prettyResult = JsonSerializer.Serialize(status, new JsonSerializerOptions() { WriteIndented = true });
+            Console.WriteLine(prettyResult);
         }
     }
 }

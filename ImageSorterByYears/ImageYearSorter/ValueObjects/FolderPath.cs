@@ -12,11 +12,11 @@ public sealed class FolderPath : ValueObject
 
     public static Result<FolderPath> Create(string fullPath)
     {
-        if (File.Exists(fullPath))
+        if (Directory.Exists(fullPath))
         {
             return new FolderPath(fullPath);
         }
-        return Result<FolderPath>.Error(new Invalidation("Not valid or not existing directory path"));
+        return Result<FolderPath>.Error(new Invalidation("Not valid or not existing directory path [{0}]", fullPath));
     }
 
     protected override IEnumerable<object> GetEqualityComponents()

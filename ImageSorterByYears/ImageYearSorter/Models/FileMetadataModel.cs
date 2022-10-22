@@ -11,29 +11,16 @@ namespace ImageYearSorter.Models
 
         public DateTimeOffset? TakenAt { get; private set; }
         public YearQuarterMarker? YearQuarter { get; private set; }
-                
-        /// <summary>Constructor</summary>
+
+        /// <summary>The constructor</summary>
         public FileMetadataModel(FilePath filePath)
         {
             _filePath = filePath;
-        }
+        }        
 
-        /// <summary>Depending on YearQuarter and if it is video or image or other</summary>
-        public string? FolderPrefix() {
-            if (!_metadataInited) throw new Exception("Find Metadata before");
-
-            if (_filePath.IsImage)
-            {
-                return YearQuarter?.YearQuaterPrefix;
-            }
-            else if (_filePath.IsVideo)
-            {
-                return YearQuarter?.YearQuaterPrefix + "Video";
-            }
-            else
-            {
-                return "Other";
-            }
+        /// <summary>The constructor when we iterating by existing files</summary>
+        public FileMetadataModel(FileInfo finfo) : this(FilePath.Create(finfo.FullName).OkResult)
+        { 
         }
 
         public FileMetadataDto FindMetadata(IPhotoDateProvider photoDateProvider)
@@ -54,19 +41,34 @@ namespace ImageYearSorter.Models
             {
                 TakenAt = fileLastWriteTime;
                 YearQuarter = YearQuarterMarker.Create(fileLastWriteTime);
+            }            
+
+            var folderPrefix = string.Empty;
+            if (isImage && YearQuarter != null)
+            {
+                folderPrefix = YearQuarter?.YearQuaterPrefix!;
+            }
+            else if (_filePath.IsVideo)
+            {
+                folderPrefix = YearQuarter?.YearQuaterPrefix + "Video";
+            }
+            else
+            {
+                folderPrefix = "Other";
             }
             _metadataInited = true;
 
             return new FileMetadataDto(
                 ImageFullPath: _filePath.NormalizedFullPath
                 , Extention: _filePath.Extension
-                , IsImage: isImage
+                , IsImage: isImage && YearQuarter != null
                 , IsVideo: isVideo
-                , HasMetadata: isImage && YearQuarter != null
                 , TakenAt: TakenAt
                 , YearQuarter: YearQuarter
                 , FileCreatedAt: fileCreationTime
-                , FileModifiedAt: fileLastWriteTime);
+                , FileModifiedAt: fileLastWriteTime
+                , FolderPrefix: folderPrefix
+                );
         }
     }
 }

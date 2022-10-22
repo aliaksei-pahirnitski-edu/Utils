@@ -29,6 +29,7 @@ public sealed class FilePath : ValueObject
         return Result<FilePath>.Error(new Invalidation("Not valid or not existing file path [{0}]", fullPath));
     }
 
+
     protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return NormalizedFullPath;

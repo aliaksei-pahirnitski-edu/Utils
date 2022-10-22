@@ -45,7 +45,7 @@ namespace ImageYearSorter.App
             var prettyResult = JsonSerializer.Serialize(pictureMetadata, new JsonSerializerOptions() { WriteIndented = true });
             Console.WriteLine(prettyResult);
 
-            if (!pictureMetadata.HasMetadata)
+            if (checkFilePathResult.OkResult.IsImage && !pictureMetadata.IsImage)
             {
                 Console.WriteLine("Image has no metadata!");
                 return;

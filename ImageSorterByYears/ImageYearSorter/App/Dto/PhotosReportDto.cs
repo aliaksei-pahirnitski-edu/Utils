@@ -3,7 +3,7 @@
 namespace ImageYearSorter.Contract.Dto
 {
     public record PhotosReportDto(
-        string folderPath
+        string FolderPath
         , IReadOnlyCollection<int> AllYears
         , int CountImagesDirect
         , int CountVideosDirect
