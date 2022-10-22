@@ -1,5 +1,4 @@
 ﻿using ImageYearSorter.Models;
-using ImageYearSorter.Models.Dto;
 
 namespace ImageYearSorter.ValueObjects;
 
@@ -23,11 +22,8 @@ public sealed class YearQuarterMarker : ValueObject {
 
     protected override IEnumerable<object> GetEqualityComponents()
     {
-        yield return Year;
-        yield return Quarter;
+        yield return YearQuaterPrefix;
     }
-
-    public YearQuarterMarkerDto AsDto() => new YearQuarterMarkerDto(Year, Quarter, YearQuaterPrefix);
 
     public static EQuarter ToQuarter(DateTimeOffset date)
     {
@@ -45,7 +41,7 @@ public sealed class YearQuarterMarker : ValueObject {
     {
         var year = date.Year;
         var quarter = ToQuarter(date);
-        var prefixYQ = year + quarter.ToString();
+        var prefixYQ = string.Intern(year + quarter.ToString());
         return new YearQuarterMarker(year, quarter, prefixYQ);
     }
 }

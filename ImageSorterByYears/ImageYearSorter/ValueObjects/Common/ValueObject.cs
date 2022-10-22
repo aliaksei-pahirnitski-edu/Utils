@@ -1,9 +1,12 @@
 ﻿namespace ImageYearSorter.ValueObjects;
 
 /// <summary>
+/// Base class for Value Objects
+/// </summary>
+/// <remarks>
 /// See https://learn.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/implement-value-objects
 /// Override GetEqualityComponents!
-/// </summary>
+/// </remarks>
 public abstract class ValueObject
 {
     /// <summary>
@@ -11,7 +14,7 @@ public abstract class ValueObject
     /// </summary>
     protected abstract IEnumerable<object> GetEqualityComponents();
 
-    protected static bool EqualOperator(ValueObject left, ValueObject right)
+    protected static bool EqualOperator(ValueObject? left, ValueObject? right)
     {
         if (ReferenceEquals(left, null) ^ ReferenceEquals(right, null))
         {
@@ -20,7 +23,7 @@ public abstract class ValueObject
         return ReferenceEquals(left, right) || left!.Equals(right);
     }
 
-    protected static bool NotEqualOperator(ValueObject left, ValueObject right)
+    protected static bool NotEqualOperator(ValueObject? left, ValueObject? right)
     {
         return !(EqualOperator(left, right));
     }
@@ -44,12 +47,12 @@ public abstract class ValueObject
             .Aggregate((x, y) => x ^ y);
     }
 
-    public static bool operator ==(ValueObject one, ValueObject two)
+    public static bool operator ==(ValueObject? one, ValueObject? two)
     {
         return EqualOperator(one, two);
     }
 
-    public static bool operator !=(ValueObject one, ValueObject two)
+    public static bool operator !=(ValueObject? one, ValueObject? two)
     {
         return NotEqualOperator(one, two);
     }

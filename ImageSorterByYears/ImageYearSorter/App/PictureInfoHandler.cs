@@ -1,6 +1,5 @@
 ﻿using System.Text.Json;
 using Cocona;
-using ImageYearSorter.App.Dto;
 using ImageYearSorter.Models;
 using ImageYearSorter.Utils;
 using ImageYearSorter.ValueObjects;
@@ -8,6 +7,7 @@ using ImageYearSorter.ValueObjects;
 namespace ImageYearSorter.App
 {
     /// <summary>
+    /// This handler prints file metadata, mostly for photo images, but also added workaround for video.
     /// Used mostly for testing purposes
     ///  - to check that we receive correct date at which picture was maid
     ///  - to check different exceptional situations
@@ -37,39 +37,19 @@ namespace ImageYearSorter.App
                 }
 
                 return;
-            }
-            
-            if (!_photoDateProvider.GetPictureDate(checkFilePathResult.OkResult, out DateTimeOffset pictureTakenAt))
+            }            
+
+            var photoModel = new FileMetadataModel(checkFilePathResult.OkResult);
+            var pictureMetadata = photoModel.FindMetadata(_photoDateProvider);
+
+            var prettyResult = JsonSerializer.Serialize(pictureMetadata, new JsonSerializerOptions() { WriteIndented = true });
+            Console.WriteLine(prettyResult);
+
+            if (!pictureMetadata.HasMetadata)
             {
-                Console.WriteLine("Image has no metadata");
+                Console.WriteLine("Image has no metadata!");
                 return;
             }
-            imageFullPath = checkFilePathResult.OkResult.NormalizedFullPath;
-
-            var photoModel = new PhotoYearQuaterModel(pictureTakenAt);
-
-            var test1 = YearQuarterMarker.Create(pictureTakenAt);
-            var test2 = YearQuarterMarker.Create(pictureTakenAt.AddDays(4));
-            var bEqA = test1 == test2;
-            var bRefEqA = Object.ReferenceEquals(test1,test2);
-
-            var test3 = test1.AsDto();
-            var test4 = test2.AsDto();
-            var bEqB = test3 == test4;
-            var bRefEqV = Object.ReferenceEquals(test3, test4);
-
-
-            var pictureInfoWithVerbose = new PhotoInfoDto(
-                ImageFullPath: imageFullPath
-                , Extention: Path.GetExtension(imageFullPath)
-                , IsImage: false // todo
-                , IsVideo: false // todo
-                , PictureTakenAt: photoModel.AsDto()
-                , FileCreatedAt: File.GetCreationTime(imageFullPath)
-                , FileModifiedAt: File.GetLastWriteTime(imageFullPath));
-
-            var prettyResult = JsonSerializer.Serialize(pictureInfoWithVerbose, new JsonSerializerOptions() { WriteIndented = true });
-            Console.WriteLine(prettyResult);
         }
     }
 }
