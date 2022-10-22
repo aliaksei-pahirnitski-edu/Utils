@@ -17,78 +17,66 @@ namespace ImageYearSorter.Models
         {
         }
 
-        public PhotosReportDto GetStatus(IPhotoDateProvider photoDateProvider)
+        public IReadOnlyCollection<MoveItem> PrepareWork(IPhotoDateProvider photoDateProvider)
         {
-            var directStat = GetStatusDirect(Folder.NormalizedFullPath, photoDateProvider);
-            var nestedStat = new FilesStat();
-            foreach(var subFolder in Directory.EnumerateDirectories(Folder.NormalizedFullPath))
-            {
-                // todo
-            }
-
-            return new PhotosReportDto(
-                Folder.NormalizedFullPath
-                , AllYears: directStat.AllYears.OrderBy(x => x).ToList()
-                , CountImagesDirect: directStat.Images
-                , CountVideosDirect: directStat.Videos
-                , CountNotImagesDirect: directStat.Others
-                , CountSubfolders: 0
-                , CountImagesNested: 0
-                , CountVideosNested: 0
-                , CountNotImagesNested: 0
-                , ImagesByYearQuarter: directStat.ImagesByPrefix.ToImmutableSortedDictionary()
-                );
+            var work = new List<MoveItem>();
+            GetWorkDirect(Folder.NormalizedFullPath, photoDateProvider, work);
+            GetWorkRecursive(Folder.NormalizedFullPath, photoDateProvider, work);
+            return work;
         }
 
-        private FilesStat GetStatusDirect(string subFolder, IPhotoDateProvider photoDateProvider)
+        private void GetWorkDirect(string subFolder, IPhotoDateProvider photoDateProvider, List<MoveItem> work)
         {
-            var directStat = new FilesStat();
             foreach (var file in new DirectoryInfo(subFolder).EnumerateFiles())
             {
                 var metadataFinder = new FileMetadataModel(file);
                 var metadata = metadataFinder.FindMetadata(photoDateProvider);
-                if (metadata.IsImage)
-                {
-                    directStat.Images++;
-                } 
-                else if (metadata.IsVideo)
-                {
-                    directStat.Videos++;
-                }
-                else
-                {
-                    directStat.Others++;
-                }
-                if (!directStat.ImagesByPrefix.TryGetValue(metadata.FolderPrefix, out int count))
-                {
-                    count = 0;
-                }
-                count++;
-                directStat.ImagesByPrefix[metadata.FolderPrefix] = count;
 
-                if (metadata.YearQuarter != null)
-                {
-                    if (!directStat.AllYears.Contains(metadata.YearQuarter.Year))
-                    {
-                        directStat.AllYears.Add(metadata.YearQuarter.Year);
-                    }
-                }
+                var item = new MoveItem(Folder, metadataFinder.FilePath, metadata.FolderPrefix);
+                work.Add(item);
             }
-            return directStat;
         }
 
-        private void GetStatusRecursive(string subFolder, IPhotoDateProvider photoDateProvider, FilesStat stat)
+        private void GetWorkRecursive(string aFolder, IPhotoDateProvider photoDateProvider, List<MoveItem> work)
         {
-            throw new NotImplementedException();
+            foreach (var subFolder in Directory.EnumerateDirectories(aFolder))
+            {
+                GetWorkDirect(subFolder, photoDateProvider, work);
+                GetWorkRecursive(subFolder, photoDateProvider, work);
+            }
         }
 
-        private class FilesStat
+        public PhotosReportDto GetStatus(IPhotoDateProvider photoDateProvider)
         {
-            public int Images;
-            public int Videos;
-            public int Others;
-            public HashSet<int> AllYears = new HashSet<int>();
-            public Dictionary<string, int> ImagesByPrefix = new Dictionary<string, int>();
+            var allWork = PrepareWork(photoDateProvider);
+
+            var statByPrefixes = allWork.GroupBy(x => x.FolderToMoveTo).ToDictionary(x => x.Key, x => x.Count());
+            var directWork = allWork.Where(x => Path.GetDirectoryName(x.RelativeFilePath) == string.Empty).ToList();
+            var actualWork = allWork.Where(x => !x.IsInCorrectLocation).ToList();
+
+            return new PhotosReportDto(
+                Folder.NormalizedFullPath
+                , CountDirect: directWork.Count
+                , CountAll: allWork.Count
+                , CountToMove: actualWork.Count
+                , CountCorrectLocation: allWork.Count - actualWork.Count
+
+                , ImagesByYearQuarter: statByPrefixes.ToImmutableSortedDictionary()
+                );
+        }
+
+        public void Move(IPhotoDateProvider photoDateProvider)
+        {
+            var allWork = PrepareWork(photoDateProvider);
+            var actualWork = allWork.Where(x => !x.IsInCorrectLocation).ToList();
+
+            foreach(var workItem in actualWork)
+            {
+                var source = Path.Combine(workItem.RootFolder, workItem.RelativeFilePath);
+                var destination = Path.Combine(workItem.RootFolder, workItem.NewFilePath);
+                Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
+                File.Move(source, destination, false);
+            }
         }
     }
 }

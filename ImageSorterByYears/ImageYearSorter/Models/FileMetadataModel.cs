@@ -7,10 +7,11 @@ namespace ImageYearSorter.Models
     public class FileMetadataModel
     {
         private readonly FilePath _filePath;
-        private bool _metadataInited = false;
 
         public DateTimeOffset? TakenAt { get; private set; }
         public YearQuarterMarker? YearQuarter { get; private set; }
+
+        public FilePath FilePath => _filePath;
 
         /// <summary>The constructor</summary>
         public FileMetadataModel(FilePath filePath)
@@ -56,7 +57,6 @@ namespace ImageYearSorter.Models
             {
                 folderPrefix = "Other";
             }
-            _metadataInited = true;
 
             return new FileMetadataDto(
                 ImageFullPath: _filePath.NormalizedFullPath

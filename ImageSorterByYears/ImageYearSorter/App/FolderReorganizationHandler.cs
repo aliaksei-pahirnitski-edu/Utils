@@ -36,7 +36,21 @@ namespace ImageYearSorter.App
         /// <param name="folderPath">Root folder where to search image files</param>
         public void Run(string folder)
         {
-            Console.WriteLine("Todo Run not implemented..");
+            Console.WriteLine($"Running folder sorting by image taken date in the folder [{folder}] ...");
+            var checkFolderResult = FolderPath.Create(folder);
+            if (!checkFolderResult.IsOk())
+            {
+                foreach (var invalidation in checkFolderResult.Invalidations!)
+                {
+                    Console.WriteLine(invalidation.GetMessage());
+                }
+
+                return;
+            }
+
+            var folderProcessor = new FolderRootModel(checkFolderResult.OkResult);
+            folderProcessor.Move(_photoDateProvider);
+            Console.WriteLine("Done!");
         }
 
         /// <summary>
