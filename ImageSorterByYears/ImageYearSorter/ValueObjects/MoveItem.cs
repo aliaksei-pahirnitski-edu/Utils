@@ -6,9 +6,12 @@
         public string RelativeFilePath { get; init; }
         public string FolderToMoveTo { get; init; }
         public bool IsInCorrectLocation => RelativeFilePath.StartsWith(FolderToMoveTo);
-        public string NewFilePath => IsInCorrectLocation
-            ? RelativeFilePath
-            : Path.Combine(FolderToMoveTo, RelativeFilePath);
+        public string NewFilePath() {
+            if (IsInCorrectLocation) return RelativeFilePath;
+            var relativeDir = Path.GetDirectoryName(RelativeFilePath);
+            var addUnderscore = relativeDir.Length > 0 ? "_" : "";
+            return Path.Combine(FolderToMoveTo + addUnderscore + relativeDir, Path.GetFileName(RelativeFilePath));
+        }
 
         public MoveItem(FolderPath rootPath, FilePath filePath, string folderPrefix)
         {

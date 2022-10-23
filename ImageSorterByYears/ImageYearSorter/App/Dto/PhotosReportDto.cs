@@ -9,7 +9,7 @@ namespace ImageYearSorter.Contract.Dto
         , int CountToMove
         , int CountCorrectLocation
         
-        , ImmutableSortedDictionary<string, int> ImagesByYearQuarter // eq prefix => count images
+        , ImmutableSortedDictionary<string, int> ImagesByYearQuarter // folder prefix => count images
         );
 
 }

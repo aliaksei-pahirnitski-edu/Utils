@@ -2,7 +2,7 @@
   "profiles": {
     "ImageYearSorter": {
       "commandName": "Project",
-      "commandLineArgs": "run --folder  E:\\Education\\02-Projects\\Utils\\ImageSorterByYears\\Assets\\"
+      "commandLineArgs": "run --folder  E:\\temp1\\temp2\\"
     }
   }
 }

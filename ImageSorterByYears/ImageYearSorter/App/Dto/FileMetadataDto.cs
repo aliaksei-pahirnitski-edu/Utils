@@ -7,7 +7,7 @@ namespace ImageYearSorter.App.Dto;
 /// </summary>
 /// <param name="ImageFullPath"></param>
 /// <param name="Extention"></param>
-/// <param name="IsImage">by extension</param>
+/// <param name="IsImage">by extension + checked that it has date in metadata</param>
 /// <param name="IsVideo">by extension</param>
 /// <param name="TakenAt">picture by metadata or video by last write time</param>
 /// <param name="FileCreatedAt">Look like it is not needed as it is time when it was copied to current folder</param>

@@ -5,8 +5,10 @@ public sealed class FilePath : ValueObject
 {
     public const string JPEG = ".jpeg";
     public const string JPG = ".jpg";
+
     public const string MP4 = ".mp4";
     public const string MOV = ".mov";
+    public const string _3GP = ".3gp";
 
     public string NormalizedFullPath { get; init; }
     
@@ -17,7 +19,7 @@ public sealed class FilePath : ValueObject
     {
         if (!File.Exists(fullPath)) throw new ArgumentException($"Not valid file path [{fullPath}]", nameof(fullPath));
         NormalizedFullPath = Path.GetFullPath(fullPath);
-        Extension = Path.GetExtension(NormalizedFullPath);
+        Extension = Path.GetExtension(NormalizedFullPath).ToLower();
     }
 
     public static Result<FilePath> Create(string fullPath)
@@ -38,5 +40,5 @@ public sealed class FilePath : ValueObject
     public override string ToString() => NormalizedFullPath;
 
     public bool IsImage => Extension == JPG || Extension == JPEG;
-    public bool IsVideo => Extension == MOV || Extension == MP4;
+    public bool IsVideo => Extension == MOV || Extension == MP4 || Extension == _3GP;
 }

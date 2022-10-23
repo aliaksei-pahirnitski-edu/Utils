@@ -2,6 +2,7 @@
 using ImageYearSorter.Utils;
 using ImageYearSorter.ValueObjects;
 using System.Collections.Immutable;
+using System.Diagnostics;
 
 namespace ImageYearSorter.Models
 {
@@ -19,13 +20,16 @@ namespace ImageYearSorter.Models
 
         public IReadOnlyCollection<MoveItem> PrepareWork(IPhotoDateProvider photoDateProvider)
         {
+            var sw = Stopwatch.StartNew();
             var work = new List<MoveItem>();
-            GetWorkDirect(Folder.NormalizedFullPath, photoDateProvider, work);
-            GetWorkRecursive(Folder.NormalizedFullPath, photoDateProvider, work);
+            CollectWorkDirect(Folder.NormalizedFullPath, photoDateProvider, work);
+            CollectWorkRecursive(Folder.NormalizedFullPath, photoDateProvider, work);
+            sw.Stop();
+            Console.WriteLine($"Work collected! It took {sw.Elapsed:hh\\:mm\\:ss\\.fff}");
             return work;
         }
 
-        private void GetWorkDirect(string subFolder, IPhotoDateProvider photoDateProvider, List<MoveItem> work)
+        private void CollectWorkDirect(string subFolder, IPhotoDateProvider photoDateProvider, List<MoveItem> work)
         {
             foreach (var file in new DirectoryInfo(subFolder).EnumerateFiles())
             {
@@ -37,12 +41,12 @@ namespace ImageYearSorter.Models
             }
         }
 
-        private void GetWorkRecursive(string aFolder, IPhotoDateProvider photoDateProvider, List<MoveItem> work)
+        private void CollectWorkRecursive(string aFolder, IPhotoDateProvider photoDateProvider, List<MoveItem> work)
         {
             foreach (var subFolder in Directory.EnumerateDirectories(aFolder))
             {
-                GetWorkDirect(subFolder, photoDateProvider, work);
-                GetWorkRecursive(subFolder, photoDateProvider, work);
+                CollectWorkDirect(subFolder, photoDateProvider, work);
+                CollectWorkRecursive(subFolder, photoDateProvider, work);
             }
         }
 
@@ -73,7 +77,7 @@ namespace ImageYearSorter.Models
             foreach(var workItem in actualWork)
             {
                 var source = Path.Combine(workItem.RootFolder, workItem.RelativeFilePath);
-                var destination = Path.Combine(workItem.RootFolder, workItem.NewFilePath);
+                var destination = Path.Combine(workItem.RootFolder, workItem.NewFilePath());
                 Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
                 File.Move(source, destination, false);
             }
