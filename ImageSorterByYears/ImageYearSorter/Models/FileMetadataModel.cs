@@ -51,7 +51,7 @@ namespace ImageYearSorter.Models
             }
             else if (_filePath.IsVideo)
             {
-                folderPrefix = YearQuarter?.YearQuaterPrefix + "Video";
+                folderPrefix = YearQuarter?.YearQuaterPrefix + "Vid";
             }
             else
             {

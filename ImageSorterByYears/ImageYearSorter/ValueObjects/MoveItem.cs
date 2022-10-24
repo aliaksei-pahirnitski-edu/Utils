@@ -9,7 +9,7 @@
         public string NewFilePath() {
             if (IsInCorrectLocation) return RelativeFilePath;
             var relativeDir = Path.GetDirectoryName(RelativeFilePath);
-            var addUnderscore = relativeDir.Length > 0 ? "_" : "";
+            var addUnderscore = (relativeDir?.Length ?? 0) > 0 ? "_" : "";
             return Path.Combine(FolderToMoveTo + addUnderscore + relativeDir, Path.GetFileName(RelativeFilePath));
         }
 
