@@ -1,4 +1,6 @@
-﻿namespace ImageYearSorter.ValueObjects
+﻿using ImageYearSorter.Models;
+
+namespace ImageYearSorter.ValueObjects
 {
     public sealed class MoveItem : ValueObject
     {
@@ -6,6 +8,14 @@
         public string RelativeFilePath { get; init; }
         public string FolderToMoveTo { get; init; }
         public bool IsInCorrectLocation => RelativeFilePath.StartsWith(FolderToMoveTo);
+
+        /// <summary>
+        /// When prefix has "!" (ex 2015! or 2016Q2!) it means should not move files
+        /// It is when metadata might not be corect and folder was named manually
+        /// </summary>
+        public bool IsManuallyLocation => HasExclamationMark(RelativeFilePath);
+        public bool NeedToBeMoved => !IsManuallyLocation && !IsInCorrectLocation;
+
         public string NewFilePath() {
             if (IsInCorrectLocation) return RelativeFilePath;
             var relativeDir = Path.GetDirectoryName(RelativeFilePath);
@@ -23,6 +33,37 @@
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return RelativeFilePath;
+        }
+
+        /// <summary>
+        /// Exceptions manually renamed by user: 2014!..., 2015Q4..., 2017Vid!...
+        /// </summary>
+        private bool HasExclamationMark(ReadOnlySpan<char> relativeFilePath)
+        {
+            const char exclamation = '!';
+            if (relativeFilePath.Length < 5) return false;
+
+            bool yearStartsWith19or20 = 
+                (relativeFilePath[0] == '1' && relativeFilePath[1] == '9')                            
+                || (relativeFilePath[0] == '2' && relativeFilePath[1] == '0');
+            if (!yearStartsWith19or20)
+            {
+                return false;
+            }
+            if (relativeFilePath[4] == exclamation) return true; // Example 2016! prefix
+
+            if (relativeFilePath.Length < 7) return false;
+            if (relativeFilePath[4] != 'Q') return false; // Prefix should be like yearQx.., ex 2021Q1
+            if (relativeFilePath[6] == exclamation) return true; // Example 2016Q4! prefix
+
+            if (relativeFilePath.Length < 7 + FileMetadataModel.CVideoPrefix.Length) return false;
+            for (int i = 0; i < FileMetadataModel.CVideoPrefix.Length; i++)
+            {
+                if (relativeFilePath[6 + i] != FileMetadataModel.CVideoPrefix[i]) return false;
+            }
+            if (relativeFilePath[6 + FileMetadataModel.CVideoPrefix.Length] == exclamation) return true; // Example 2016Q4Vid! prefix
+
+            return false;
         }
     }
 }

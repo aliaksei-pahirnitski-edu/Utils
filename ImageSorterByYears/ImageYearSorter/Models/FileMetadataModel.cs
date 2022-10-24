@@ -7,6 +7,7 @@ namespace ImageYearSorter.Models
     public class FileMetadataModel
     {
         private readonly FilePath _filePath;
+        public const string CVideoPrefix = "Vid";
 
         public DateTimeOffset? TakenAt { get; private set; }
         public YearQuarterMarker? YearQuarter { get; private set; }
@@ -51,7 +52,7 @@ namespace ImageYearSorter.Models
             }
             else if (_filePath.IsVideo)
             {
-                folderPrefix = YearQuarter?.YearQuaterPrefix + "Vid";
+                folderPrefix = string.Intern(YearQuarter?.YearQuaterPrefix + CVideoPrefix);
             }
             else
             {

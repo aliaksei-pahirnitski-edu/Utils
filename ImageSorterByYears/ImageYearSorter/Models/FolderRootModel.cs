@@ -54,25 +54,30 @@ namespace ImageYearSorter.Models
         {
             var allWork = PrepareWork(photoDateProvider);
 
-            var statByPrefixes = allWork.GroupBy(x => x.FolderToMoveTo).ToDictionary(x => x.Key, x => x.Count());
             var directWork = allWork.Where(x => Path.GetDirectoryName(x.RelativeFilePath) == string.Empty).ToList();
-            var actualWork = allWork.Where(x => !x.IsInCorrectLocation).ToList();
+            var actualWork = allWork.Where(x => x.NeedToBeMoved).ToList();
+
+            var dictPrefixesToMoveTo = allWork.Where(x => x.NeedToBeMoved).GroupBy(x => x.FolderToMoveTo).ToDictionary(x => x.Key, x => x.Count());
+            var dictPrefixesManual = allWork.Where(x => x.IsManuallyLocation).GroupBy(x => x.FolderToMoveTo).ToDictionary(x => x.Key, x => x.Count());
+            var dictPrefixesCorrect = allWork.Where(x => !x.NeedToBeMoved).GroupBy(x => x.FolderToMoveTo).ToDictionary(x => x.Key, x => x.Count());
 
             return new PhotosReportDto(
                 Folder.NormalizedFullPath
                 , CountDirect: directWork.Count
                 , CountAll: allWork.Count
                 , CountToMove: actualWork.Count
-                , CountCorrectLocation: allWork.Count - actualWork.Count
+                , CountCorrectOrManualLocation: allWork.Count - actualWork.Count
 
-                , ImagesByYearQuarter: statByPrefixes.ToImmutableSortedDictionary()
+                , ImagesByYearQuarterMove: dictPrefixesToMoveTo.ToImmutableSortedDictionary()
+                , ImagesByYearQuarterManual: dictPrefixesManual.ToImmutableSortedDictionary()
+                , ImagesByYearQuarterCorrect: dictPrefixesCorrect.ToImmutableSortedDictionary()
                 );
         }
 
         public void Move(IPhotoDateProvider photoDateProvider)
         {
             var allWork = PrepareWork(photoDateProvider);
-            var actualWork = allWork.Where(x => !x.IsInCorrectLocation).ToList();
+            var actualWork = allWork.Where(x => x.NeedToBeMoved).ToList();
 
             foreach(var workItem in actualWork)
             {
