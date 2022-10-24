@@ -32,7 +32,7 @@ public sealed class YearQuarterMarker : ValueObject {
         {
             <= 3 => EQuarter.Q1,
             > 3 and <= 6 => EQuarter.Q2,
-            > 6 and <= 9 => EQuarter.Q2,
+            > 6 and <= 9 => EQuarter.Q3,
             > 9 => EQuarter.Q4,
         };
     }
