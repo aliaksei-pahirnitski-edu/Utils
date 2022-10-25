@@ -7,9 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileMerger", "FileMerger\Fi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{C590BE79-FC9E-43CC-8261-1FAB5FE37657}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileMerger.App", "FileMerger.App\FileMerger.App.csproj", "{F6C0E7F2-2331-44F0-AE6C-292A5D72A096}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileMerger.App", "FileMerger.App\FileMerger.App.csproj", "{F6C0E7F2-2331-44F0-AE6C-292A5D72A096}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileMerger.Domain", "FileMerger.Domain\FileMerger.Domain.csproj", "{22AACC6D-470E-406D-90AD-69D52BC495C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileMerger.Domain", "FileMerger.Domain\FileMerger.Domain.csproj", "{22AACC6D-470E-406D-90AD-69D52BC495C0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Impl", "Impl", "{6673B741-470D-478E-9110-AFA08A63F856}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileMerger.Scan", "FileMerger.Scan\FileMerger.Scan.csproj", "{8A25EF57-FB8D-41DC-BB43-64A69F374C7F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +33,10 @@ Global
 		{22AACC6D-470E-406D-90AD-69D52BC495C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{22AACC6D-470E-406D-90AD-69D52BC495C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{22AACC6D-470E-406D-90AD-69D52BC495C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A25EF57-FB8D-41DC-BB43-64A69F374C7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A25EF57-FB8D-41DC-BB43-64A69F374C7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A25EF57-FB8D-41DC-BB43-64A69F374C7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A25EF57-FB8D-41DC-BB43-64A69F374C7F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -36,6 +44,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{F6C0E7F2-2331-44F0-AE6C-292A5D72A096} = {C590BE79-FC9E-43CC-8261-1FAB5FE37657}
 		{22AACC6D-470E-406D-90AD-69D52BC495C0} = {C590BE79-FC9E-43CC-8261-1FAB5FE37657}
+		{8A25EF57-FB8D-41DC-BB43-64A69F374C7F} = {6673B741-470D-478E-9110-AFA08A63F856}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3E4DD742-AAB8-46E7-9F7D-9B9CA7306933}

@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FileMerger.App\FileMerger.App.csproj" />
+    <ProjectReference Include="..\FileMerger.Scan\FileMerger.Scan.csproj" />
   </ItemGroup>
 
 </Project>

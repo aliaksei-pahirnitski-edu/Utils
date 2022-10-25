@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "FileMerger": {
+      "commandName": "Project",
+      "commandLineArgs": "status E:\\ETemp\\"
+    }
+  }
+}
