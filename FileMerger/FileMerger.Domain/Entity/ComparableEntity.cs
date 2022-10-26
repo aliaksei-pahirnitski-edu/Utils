@@ -20,9 +20,16 @@ public class ComparableEntity
     }
 
     /// <summary>
+    /// Constructor for entity framework
+    /// </summary>
+    protected ComparableEntity()
+    {
+    }
+
+    /// <summary>
     /// PC name if known
     /// </summary>
-    string Host { get; init; }
+    public string Host { get; init; }
 
     public long Size { get; set; }
     public string Hash { get; set; }

@@ -10,6 +10,7 @@
         /// <returns>Modified full filename</returns>
         string SaveToFile(ISnapshot data, string fullPath);
 
-        ISnapshot/*TreeSnapshot*/ ReadFromFile(string fullPath);
+        ISnapshot ReadFromFile(string fullPath);
+        string SuggestFileName(ISnapshot data);
     }
 }

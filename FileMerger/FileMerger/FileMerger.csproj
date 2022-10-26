@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -14,6 +14,13 @@
   <ItemGroup>
     <ProjectReference Include="..\FileMerger.App\FileMerger.App.csproj" />
     <ProjectReference Include="..\FileMerger.Scan\FileMerger.Scan.csproj" />
+    <ProjectReference Include="..\FileMerger.Sqlite\FileMerger.Sqlite.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

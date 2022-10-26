@@ -1,5 +1,7 @@
 ﻿using Cocona;
-using FileMerger.Domain.Entity;
+using FileMerger.Settings;
+using Microsoft.Extensions.Options;
+using System.Diagnostics;
 using System.Text.Json;
 
 namespace FileMerger.App.Handlers
@@ -10,10 +12,12 @@ namespace FileMerger.App.Handlers
     public class StatusController
     {
         private readonly StatusHandler _statusHandler;
+        private readonly CommonSettings _commonSettings;
 
-        public StatusController(StatusHandler statusHandler)
+        public StatusController(StatusHandler statusHandler, IOptions<CommonSettings> commonSettings)
         {
             _statusHandler = statusHandler;
+            _commonSettings = commonSettings.Value;
         }
 
         [Command("status", Description = "For file and for folder - gets hash and check if has matches")]
@@ -41,6 +45,12 @@ namespace FileMerger.App.Handlers
 
         public void StatusForFolder(string folderPath)
         {
+            
+            Console.WriteLine($"Making status for [{folderPath}]");
+            Console.WriteLine($"WorkingFolder = [{_commonSettings.WorkingFolder}]");
+            Console.WriteLine($"Directory.GetCurrentDirectory() = [{Directory.GetCurrentDirectory()}]");
+            
+            var sw = Stopwatch.StartNew();
             var result = _statusHandler.StatusForFolder(folderPath);
             //foreach(var file in result.Folder.Children)
             //{
@@ -49,6 +59,8 @@ namespace FileMerger.App.Handlers
             result.Folder.Children?.Clear(); // do not need, empty for json serializer to work
             var prettyJson = JsonSerializer.Serialize(result, new JsonSerializerOptions() { WriteIndented = true });
             Console.WriteLine(prettyJson);
+            sw.Stop();
+            Console.WriteLine($"Occupied {sw.Elapsed:hh\\:mm\\:ss\\_fff\\.ff}");
         }
     }
 }

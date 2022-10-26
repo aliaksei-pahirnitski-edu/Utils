@@ -6,6 +6,13 @@ public class FileEntity : ComparableEntity
     {
     }
 
+    /// <summary>
+    /// Constructor for entity framework
+    /// </summary>
+    private FileEntity()
+    {
+    }
+
     public override string ToString()
     {
         return $"File: {FullName}";
