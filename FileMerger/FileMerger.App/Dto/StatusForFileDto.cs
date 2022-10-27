@@ -3,5 +3,5 @@ using FilesHashComparer.Domain.Result;
 
 namespace FileMerger.App.Dto
 {
-    public record StatusForFileDto(bool Exists, FileEntity File, IReadOnlyCollection<MatchItemResult> Matches);
+    public record StatusForFileDto(bool Exists, FileEntity File, MatchItemResult Matches);
 }

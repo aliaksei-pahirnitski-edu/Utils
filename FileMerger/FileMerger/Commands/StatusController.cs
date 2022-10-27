@@ -38,15 +38,20 @@ namespace FileMerger.App.Handlers
 
         private void StatusForFile(string filePath)
         {
-            var result = _statusHandler.StatusForFile(filePath);
+            if (_commonSettings.WorkingFolder == null) throw new Exception("WorkingFolder not set");
+            Console.WriteLine($"Making status for file [{filePath}]");
+            Console.WriteLine($"WorkingFolder = [{_commonSettings.WorkingFolder}]");
+            Console.WriteLine($"Directory.GetCurrentDirectory() = [{Directory.GetCurrentDirectory()}]");
+
+            var snapshotFilePath = Path.Combine(_commonSettings.WorkingFolder, _commonSettings.CompareTo);
+            var result = _statusHandler.StatusForFile(filePath, snapshotFilePath);
             var prettyJson = JsonSerializer.Serialize(result, new JsonSerializerOptions() { WriteIndented = true });
             Console.WriteLine(prettyJson);
         }
 
         public void StatusForFolder(string folderPath)
-        {
-            
-            Console.WriteLine($"Making status for [{folderPath}]");
+        {            
+            Console.WriteLine($"Making status for folder [{folderPath}]");
             Console.WriteLine($"WorkingFolder = [{_commonSettings.WorkingFolder}]");
             Console.WriteLine($"Directory.GetCurrentDirectory() = [{Directory.GetCurrentDirectory()}]");
             

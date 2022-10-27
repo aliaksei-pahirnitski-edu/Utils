@@ -2,7 +2,7 @@
   "profiles": {
     "FileMerger": {
       "commandName": "Project",
-      "commandLineArgs": "status E:\\ETemp\\"
+      "commandLineArgs": "status E:\\Temp\\TestFolder\\testfile.jpg"
     }
   }
 }

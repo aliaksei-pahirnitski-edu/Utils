@@ -9,7 +9,7 @@ namespace FilesHashComparer.Domain.Result
         /// <summary>Found matches in target snapshot</summary>
         public IEnumerable<string> FullPathes { get; }
         
-        /// <summary>For which file this reult is </summary>
+        /// <summary>For which file this result is </summary>
         public string FullPathOfSubject { get; }
 
         public MatchItemResult(string fullPathOfSubject, IEnumerable<ComparableEntity> matches)

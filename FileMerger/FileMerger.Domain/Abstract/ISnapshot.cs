@@ -13,13 +13,22 @@ namespace FileMerger.Domain.Abstract
         string Host { get; }
 
         /// <summary>
+        /// External info
+        /// </summary>
+        IDictionary<string, object> Tag { get; }
+
+        /// <summary>
         /// Tree or forest of files and folder metadata
         /// </summary>
         IEnumerable<ComparableEntity> Items { get; }
 
-        /// <summary>
-        /// External info
-        /// </summary>
-        IDictionary<string, object> Tag { get; }
+        IReadOnlyCollection<ComparableEntity> Find(FileEntity file)
+        {
+            Console.WriteLine("Default method in ISnapshot");
+            return Items
+                .Where(x => x.Hash == file.Hash && x.Size == file.Size) // search by shortname?
+                .Where(x => x.Host != file.Host || x.FullName != file.FullName) // exclude itself from match
+                .ToList();
+        }
     }
 }

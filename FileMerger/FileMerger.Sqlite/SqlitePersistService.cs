@@ -16,7 +16,18 @@ namespace FileMerger.Sqlite
 
         public ISnapshot ReadFromFile(string fullPath)
         {
-            throw new NotImplementedException();
+            if (!File.Exists(fullPath))
+            {
+                throw new FileNotFoundException(fullPath);
+            }
+            _dbCtx.Database.SetConnectionString($"Data Source={fullPath}");
+
+            var host = ParseHostFromFileName(fullPath);
+            if (string.IsNullOrEmpty(host))
+            {
+                throw new Exception("File name should contain host as sufix in format 'prefix_date.suffix.sqlite'");
+            }
+            return new SqliteSnapshot(host, _dbCtx.Set<FileEntity>());
         }
 
         public string SaveToFile(ISnapshot data, string fullPath)
@@ -60,6 +71,17 @@ namespace FileMerger.Sqlite
                 prefix = treeSnapshot.Root.ShortName;
             }
             return $"{prefix}_{DateTime.Now:yyyyMMdd}.{Environment.MachineName}.sqlite";
+        }
+
+        private string ParseHostFromFileName(string filePath)
+        {
+            var fileName = Path.GetFileNameWithoutExtension(filePath);
+            var suffix = Path.GetExtension(fileName);
+            if (!string.IsNullOrEmpty(suffix) && suffix[0] == '.')
+            {
+                return suffix[1..];
+            }
+            return string.Empty;
         }
     }
 }

@@ -38,6 +38,8 @@ namespace FileMerger.Sqlite
                 b.Property(x => x.ShortName).HasMaxLength(100).IsRequired();
                 b.Property(x => x.Host).HasMaxLength(50).IsRequired();
                 b.Property(x => x.Hash).HasMaxLength(100).IsRequired();
+
+                b.HasIndex(x => x.Hash);
             });
         }
     }

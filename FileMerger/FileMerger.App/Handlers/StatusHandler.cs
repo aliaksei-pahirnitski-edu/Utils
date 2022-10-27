@@ -1,5 +1,6 @@
 ﻿using FileMerger.App.Dto;
 using FileMerger.Domain.Abstract;
+using FileMerger.Domain.Entity;
 using FilesHashComparer.Domain.Result;
 
 namespace FileMerger.App.Handlers
@@ -10,20 +11,29 @@ namespace FileMerger.App.Handlers
     public class StatusHandler
     {
         private readonly IScanner _scanner;
+        private readonly IPersist _repo;
 
-        public StatusHandler(IScanner scanner)
+        public StatusHandler(IScanner scanner, IPersist repo)
         {
             _scanner = scanner;
+            _repo = repo;
         }
 
-        public StatusForFileDto StatusForFile(string filePath)
+        public StatusForFileDto StatusForFile(string filePath, string snapshotFilePath)
         {
             var fileEntity = _scanner.ScanFile(filePath);
 
+            IReadOnlyCollection<ComparableEntity> matches = Array.Empty<ComparableEntity>();
+            if (File.Exists(snapshotFilePath))
+            {
+                var snapshot = _repo.ReadFromFile(snapshotFilePath);
+                matches = snapshot.Find(fileEntity);
+            }
+
             return new StatusForFileDto(
-                Exists: false // todo
+                Exists: matches.Any()
                 , File: fileEntity
-                , Matches: Array.Empty<MatchItemResult>()
+                , Matches: new MatchItemResult(filePath, matches)
                 );
         }
 
