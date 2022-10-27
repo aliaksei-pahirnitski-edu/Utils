@@ -21,5 +21,6 @@ coconaBuilder.Services.AddSqliteRepo();
 var app = coconaBuilder.Build();
 app.AddCommands<StatusController>();
 app.AddCommands<ScanController>();
+app.AddCommands<SearchDuplicatesController>();
 
 app.Run();

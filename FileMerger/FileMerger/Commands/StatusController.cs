@@ -43,7 +43,7 @@ namespace FileMerger.App.Handlers
             Console.WriteLine($"WorkingFolder = [{_commonSettings.WorkingFolder}]");
             Console.WriteLine($"Directory.GetCurrentDirectory() = [{Directory.GetCurrentDirectory()}]");
 
-            var snapshotFilePath = Path.Combine(_commonSettings.WorkingFolder, _commonSettings.CompareTo);
+            var snapshotFilePath = Path.Combine(_commonSettings.WorkingFolder, _commonSettings.SnapshotCompareTo);
             var result = _statusHandler.StatusForFile(filePath, snapshotFilePath);
             var prettyJson = JsonSerializer.Serialize(result, new JsonSerializerOptions() { WriteIndented = true });
             Console.WriteLine(prettyJson);
