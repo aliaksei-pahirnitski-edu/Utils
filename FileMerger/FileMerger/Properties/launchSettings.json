@@ -2,7 +2,7 @@
   "profiles": {
     "FileMerger": {
       "commandName": "Project",
-      "commandLineArgs": "status E:\\Temp\\TestFolder\\testfile.jpg"
+      "commandLineArgs": "process-duplicates --folder E:\\ETemp\\TestFolder"
     }
   }
 }

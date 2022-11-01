@@ -49,7 +49,7 @@ namespace FileMerger.App.Handlers
             Console.WriteLine(prettyJson);
         }
 
-        public void StatusForFolder(string folderPath)
+        private void StatusForFolder(string folderPath)
         {            
             Console.WriteLine($"Making status for folder [{folderPath}]");
             Console.WriteLine($"WorkingFolder = [{_commonSettings.WorkingFolder}]");

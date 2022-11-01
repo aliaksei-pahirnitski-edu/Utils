@@ -49,6 +49,7 @@ namespace FileMerger.App.Handlers
             if (!Directory.Exists(folder))
             {
                 Console.WriteLine($"Folder not valid or not exists: [{folder}]");
+                return;
             }
 
             Console.WriteLine($"start search duplicates for [{folder}] ..");
@@ -68,11 +69,15 @@ namespace FileMerger.App.Handlers
             }
             _countExisting = 0;
             _countUnique = 0;
-            Parallel.ForEach(_scannedFolder.DeeplyEnumerate(), CheckIfDuplicate);
-
+            // Parallel.ForEach(_scannedFolder.DeeplyEnumerate(), CheckIfDuplicate);
+            foreach (var item in _scannedFolder.DeeplyEnumerate())
+            {
+                CheckIfDuplicate(item);
+            }
 
             sw.Stop();
-            Console.WriteLine($"Done! Took {sw.Elapsed:hh\\:mm\\:ss\\_fff\\.ff}");
+            Console.WriteLine($"Done! Found {_countExisting} duplicates and {_countUnique} unique files");
+            Console.WriteLine($"Took {sw.Elapsed:hh\\:mm\\:ss\\_fff\\.ff}");
         }
 
         private void CheckIfDuplicate(ComparableEntity entity)
@@ -100,6 +105,13 @@ namespace FileMerger.App.Handlers
                 }
                 var relativePath = Path.GetRelativePath(_scannedFolder.FullName, fileEntity.FullName);
                 var destination = Path.Combine(_scannedFolder.FullName, "Existing", relativePath);
+                
+                var finfo = new FileInfo(destination);
+                if (!Directory.Exists(finfo.DirectoryName))
+                {
+                    Directory.CreateDirectory(finfo.DirectoryName!);
+                }
+
                 File.Move(fileEntity.FullName, destination);
             }
         }

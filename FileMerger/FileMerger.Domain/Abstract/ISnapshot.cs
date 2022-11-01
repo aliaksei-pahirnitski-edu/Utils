@@ -24,7 +24,6 @@ namespace FileMerger.Domain.Abstract
 
         IReadOnlyCollection<ComparableEntity> Find(FileEntity file)
         {
-            Console.WriteLine("Default method in ISnapshot");
             return Items
                 .Where(x => x.Hash == file.Hash && x.Size == file.Size) // search by shortname?
                 .Where(x => x.Host != file.Host || x.FullName != file.FullName) // exclude itself from match

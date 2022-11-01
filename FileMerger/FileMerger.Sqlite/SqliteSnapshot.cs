@@ -1,6 +1,5 @@
 ﻿using FileMerger.Domain.Abstract;
 using FileMerger.Domain.Entity;
-using Microsoft.EntityFrameworkCore;
 
 namespace FileMerger.Sqlite
 {
@@ -23,7 +22,6 @@ namespace FileMerger.Sqlite
 
         public IReadOnlyCollection<ComparableEntity> Find(FileEntity file)
         {
-            Console.WriteLine("Specific sqlite implementation");
             var withSameHash = _allFiles.Where(x => x.Hash == file.Hash).ToList();
             return withSameHash.Where(x => x.Size == x.Size) // search by shortname?
                 .Where(x => x.Host != file.Host || x.FullName != file.FullName) // exclude itself from match
