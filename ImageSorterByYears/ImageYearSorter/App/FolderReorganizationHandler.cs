@@ -35,7 +35,7 @@ namespace ImageYearSorter.App
         /// Performs relocation of images, except ones already located in year-with-quarter subfolder
         /// </summary>
         /// <param name="folderPath">Root folder where to search image files</param>
-        public void Run(string folder)
+        public void Run(string folder, bool cleanEmpty = true)
         {
             var sw = Stopwatch.StartNew();
             Console.WriteLine($"Running folder sorting by image taken date in the folder [{folder}] ...");

@@ -5,6 +5,9 @@ using ImageYearSorter.Impl;
 using ImageYearSorter.Utils;
 using Microsoft.Extensions.DependencyInjection;
 
+Console.OutputEncoding = System.Text.Encoding.UTF8;
+Console.InputEncoding = System.Text.Encoding.UTF8;
+
 var coconaBuilder = CoconaApp.CreateBuilder(args);
 coconaBuilder.Services.AddTransient<IPhotoDateProvider, PhotoDateProvider>();
 

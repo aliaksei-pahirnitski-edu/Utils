@@ -2,7 +2,11 @@
   "profiles": {
     "ImageYearSorter": {
       "commandName": "Project",
-      "commandLineArgs": "run --folder  E:\\temp1\\temp2\\"
+      "commandLineArgs": "run --folder \"C:\\temp\\Виктор Леопольдович\""
+    },
+    "ImageYearSorterHelp": {
+      "commandName": "Project",
+      "commandLineArgs": "run --help"
     }
   }
 }
