@@ -41,6 +41,17 @@ namespace ImageYearSorter.ValueObjects
         private bool HasExclamationMark(ReadOnlySpan<char> relativeFilePath)
         {
             const char exclamation = '!';
+
+            // updated: if folder starts or ends with ! then do not move it
+            if (relativeFilePath.Length < 1) return false;
+            if (relativeFilePath[0] == exclamation) return true;
+            if (relativeFilePath.IndexOf(exclamation) > 0)
+            {
+                var dirName = Path.GetDirectoryName(relativeFilePath);
+                if (dirName.Length > 0 && dirName[^1] == exclamation) return true;
+            }
+
+            // old logic was to name manually like 202X! or 2016Q2!
             if (relativeFilePath.Length < 5) return false;
 
             bool yearStartsWith19or20 = 

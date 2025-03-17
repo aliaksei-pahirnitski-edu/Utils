@@ -53,8 +53,28 @@ namespace ImageYearSorter.App
             var folderProcessor = new FolderRootModel(checkFolderResult.OkResult);
             folderProcessor.Move(_photoDateProvider);
             sw.Stop();
+
+            if (cleanEmpty)
+            {
+                foreach (DirectoryInfo emptyFolder in FindEmptyFolders(checkFolderResult.OkResult).ToList())
+                {
+                    emptyFolder.Delete();
+                }
+            }
+            
             var timespan = sw.Elapsed.ToString(GuiTimeSmallSpanFormat);
             Console.WriteLine($"Done!  in {sw.Elapsed:hh\\:mm\\:ss\\.fff}");
+        }
+
+        private IEnumerable<DirectoryInfo> FindEmptyFolders(FolderPath folderPath)
+        {
+            foreach(var subDir in new DirectoryInfo(folderPath.NormalizedFullPath).EnumerateDirectories())
+            {
+                if (!subDir.EnumerateDirectories().Any() && !subDir.EnumerateFiles().Any())
+                {
+                    yield return subDir;
+                }
+            }
         }
 
         /// <summary>
